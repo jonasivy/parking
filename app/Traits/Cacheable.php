@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 trait Cacheable
 {
@@ -18,22 +19,22 @@ trait Cacheable
         /**
          * @return void
          */
-        static::created(function () {
-            Cache::tags(constant(self::class . '::CACHE_TAG'))->flush();
+        static::created(function ($model) {
+            Cache::tags($model->getTable() . '-query')->flush();
         });
 
         /**
          * @return void
          */
-        static::updated(function () {
-            Cache::tags(constant(self::class . '::CACHE_TAG'))->flush();
+        static::updated(function ($model) {
+            Cache::tags($model->getTable() . '-query')->flush();
         });
 
         /**
          * @return void
          */
-        static::deleted(function () {
-            Cache::tags(constant(self::class . '::CACHE_TAG'))->flush();
+        static::deleted(function ($model) {
+            Cache::tags($model->getTable() . '-query')->flush();
         });
     }
 }
