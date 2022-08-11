@@ -12,4 +12,11 @@ class Type extends Model
     use HasFactory,
         Rememberable,
         Cacheable;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'vehicle_types';
 }
