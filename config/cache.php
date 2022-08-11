@@ -107,6 +107,4 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
-    /* Custom Config */
-    'retention' => 60 * 60 * 24 * 90, # 90 DAYS
 ];
