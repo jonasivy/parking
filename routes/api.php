@@ -17,3 +17,20 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('entry-point')
+    ->namespace('App\Http\Controllers')
+    ->group(function () {
+        Route::get('', [
+            'as'   => 'entry-point.index',
+            'uses' => 'EntryPointController@index',
+        ]);
+        Route::post('', [
+            'as'   => 'entry-point.store',
+            'uses' => 'EntryPointController@store',
+        ]);
+        Route::delete('', [
+            'as'   => 'entry-point.delete',
+            'uses' => 'EntryPointController@delete',
+        ]);
+    });
