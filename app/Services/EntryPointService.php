@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\EntryPoint;
 use App\Repositories\EntryPointRepository;
 
 class EntryPointService
@@ -11,12 +10,47 @@ class EntryPointService
     protected $entryPointRepository;
 
     /**
-     * @var EntryPoint $entryPoint
+     * @param \App\Repositories\EntryPointRepository $repository
+     * @return void
      */
-    protected $entryPoint;
-
-    public function __construct(EntryPointRepository $entryPointRepository)
+    public function __construct(EntryPointRepository $repository)
     {
-        $this->entryPointRepository = $entryPointRepository;
+        $this->entryPointRepository = $repository;
+    }
+
+    /**
+     * Get all saved entry point.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllEntryPoints()
+    {
+        return $this->entryPointRepository
+            ->getAllEntryPoints();
+    }
+
+    /**
+     * Check entry point if already existing.
+     *
+     * @param int $x
+     * @param int $y
+     */
+    public function isExists(int $x, int $y)
+    {
+        return $this->entryPointRepository
+            ->isExists($x, $y);
+    }
+
+    /**
+     * Create new entry point.
+     *
+     * @param int $xAxis
+     * @param int $yAxis
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function makeEntryPoints(int $x, int $y)
+    {
+        return $this->entryPointRepository
+            ->saveEntryPoint($x, $y);
     }
 }
