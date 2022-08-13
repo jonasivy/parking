@@ -19,21 +19,21 @@ trait Cacheable
          * @return void
          */
         static::created(function ($model) {
-            Cache::tags($model->getTable() . '-query')->flush();
+            Cache::tags($model::CACHE_TAG)->flush();
         });
 
         /**
          * @return void
          */
         static::updated(function ($model) {
-            Cache::tags($model->getTable() . '-query')->flush();
+            Cache::tags($model::CACHE_TAG)->flush();
         });
 
         /**
          * @return void
          */
         static::deleted(function ($model) {
-            Cache::tags($model->getTable() . '-query')->flush();
+            Cache::tags($model::CACHE_TAG)->flush();
         });
     }
 }
