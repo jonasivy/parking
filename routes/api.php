@@ -25,12 +25,16 @@ Route::prefix('entry-point')
             'as'   => 'entry-point.index',
             'uses' => 'EntryPointController@index',
         ]);
+        Route::get('{entryPoint}', [
+            'as'   => 'entry-point.show',
+            'uses' => 'EntryPointController@show',
+        ]);
         Route::post('', [
             'as'   => 'entry-point.store',
             'uses' => 'EntryPointController@store',
         ]);
-        Route::delete('', [
-            'as'   => 'entry-point.delete',
-            'uses' => 'EntryPointController@delete',
+        Route::delete('{entryPoint}', [
+            'as'   => 'entry-point.destroy',
+            'uses' => 'EntryPointController@destroy',
         ]);
     });
