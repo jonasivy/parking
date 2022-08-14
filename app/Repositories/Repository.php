@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 abstract class Repository
 {
     /** @param \Illuminate\Database\Eloquent\Model */
-    protected $model;
+    public $model;
 
     /** @param \Illuminate\Database\Eloquent\Model */
-    protected $freshModel;
+    public $freshModel;
 
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
@@ -87,6 +87,23 @@ abstract class Repository
         }
 
         return $query
+            ->first();
+    }
+
+    /**
+     * Get one random resources.
+     *
+     * @param array $filter
+     * @param array $orders
+     * @param integer $limit
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getOneRandom(array $filter = [])
+    {
+        return $this->model
+            ->dontRemember()
+            ->where($filter)
+            ->inRandomOrder()
             ->first();
     }
 
