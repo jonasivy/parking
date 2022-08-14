@@ -42,18 +42,18 @@ class ValidXAxisRule implements Rule
 
         $this->xAxis = $value;
 
-        $minXAxis = 1;
-        $minYAxis = 1;
-        $maxXAxis = $this->settingService->getAxis('x')->value;
-        $maxYAxis = $this->settingService->getAxis('y')->value;
+        $minAxisX = 1;
+        $minAxisY = 1;
+        $maxAxisX = $this->settingService->getAxis('x')->value ?? 0;
+        $maxAxisY = $this->settingService->getAxis('y')->value ?? 0;
 
         if (!in_array($value, [
-            $minXAxis,
-            $maxXAxis,
+            $minAxisX,
+            $maxAxisX,
         ])) {
             if (!in_array($this->yAxis, [
-                $minYAxis,
-                $maxYAxis,
+                $minAxisY,
+                $maxAxisY,
             ])) {
                 $status = false;
             }
