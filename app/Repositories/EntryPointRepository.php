@@ -6,9 +6,6 @@ use App\Models\EntryPoint;
 
 class EntryPointRepository extends Repository
 {
-    /** @var \App\Models\EntryPoint */
-    protected $model;
-
     /**
      * @return void
      */

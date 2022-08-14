@@ -26,6 +26,7 @@ class InitCommand extends Command
 
     /**
      * @param \App\Services\SettingService $settingService
+     * @return void
      */
     public function __construct(SettingService $settingService)
     {

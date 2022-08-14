@@ -6,9 +6,6 @@ use App\Models\Setting;
 
 class SettingRepository extends Repository
 {
-    /** @var \App\Models\Setting */
-    protected $model;
-
     /**
      * @return void
      */
@@ -18,7 +15,7 @@ class SettingRepository extends Repository
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \App\Models\Setting
      */
     public function getXAxis()
     {
@@ -29,7 +26,7 @@ class SettingRepository extends Repository
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \App\Models\Setting
      */
     public function getYAxis()
     {
