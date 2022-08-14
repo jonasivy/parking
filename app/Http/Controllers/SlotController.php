@@ -54,9 +54,9 @@ class SlotController extends Controller
      * Display the specified resource.
      *
      * @param \App\Http\Requests\Slot\ShowRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Http\Resources\Slot\Resource
      */
-    public function show(ShowRequest $request): JsonResponse
+    public function show(ShowRequest $request): Resource
     {
         try {
             $slot = $this->slotService->getOneByCoordinates($request->route('x'), $request->route('y'));
@@ -81,9 +81,9 @@ class SlotController extends Controller
      * @param  \App\Http\Requests\Slot\UpdateRequest  $request
      * @param int $x
      * @param int $y
-     * @return \Illuminate\Http\JsonResponse
+     * @return \App\Http\Resources\Slot\Resource
      */
-    public function update(UpdateRequest $request, int $x, int $y): JsonResponse
+    public function update(UpdateRequest $request, int $x, int $y): Resource
     {
         try {
             $slot = $this->slotService->getOneByCoordinates($x, $y);
