@@ -19,4 +19,20 @@ class Type extends Model
      * @var string
      */
     protected $table = 'slot_types';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'code',
+        'name',
+    ];
+
+    /** @var string */
+    const CACHE_TAG = 'slot_type_query';
+
+    /** @var string */
+    public $rememberCacheTag = 'slot_type_query';
 }

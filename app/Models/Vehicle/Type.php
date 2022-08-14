@@ -19,4 +19,20 @@ class Type extends Model
      * @var string
      */
     protected $table = 'vehicle_types';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'code',
+        'name',
+    ];
+
+    /** @var string */
+    const CACHE_TAG = 'vehicle_type_query';
+
+    /** @var string */
+    public $rememberCacheTag = 'vehicle_type_query';
 }
