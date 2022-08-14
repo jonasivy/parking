@@ -2,40 +2,101 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Slot\ShowRequest;
+use App\Http\Requests\Slot\UpdateRequest;
+use App\Http\Resources\Slot\Collection;
+use App\Http\Resources\Slot\Resource;
+use App\Services\SlotService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SlotController extends Controller
 {
     /**
+     * @param \App\Services\SlotService $slotService
+     * @return void
+     */
+    public function __construct(SlotService $slotService)
+    {
+        $this->slotService = $slotService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $slot = $this->slotService->getSlotList($request);
+
+            return new Collection($slot);
+        } catch (\Exception $e) {
+            Log::error(__CLASS__);
+            Log::error(__FUNCTION__);
+            Log::error($e);
+
+            return response()
+                ->json([
+                    'status_code' => 0,
+                    'message'     => 'Ooops! Something went wrong!',
+                ]);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \App\Http\Requests\Slot\ShowRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(ShowRequest $request)
     {
-        //
+        try {
+            $slot = $this->slotService->getOneByCoordinates($request->route('x'), $request->route('y'));
+
+            return new Resource($slot);
+        } catch (\Exception $e) {
+            Log::error(__CLASS__);
+            Log::error(__FUNCTION__);
+            Log::error($e);
+
+            return response()
+                ->json([
+                    'status_code' => 0,
+                    'message'     => 'Ooops! Something went wrong!',
+                ]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $x
+     * @param int $y
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, int $x, int $y)
     {
-        //
+        try {
+            $slot = $this->slotService->getOneByCoordinates($x, $y);
+
+            $this->slotService->changeSlotType($slot, $request->input('slot_type_id'));
+    
+            return new Resource($slot->fresh());
+        } catch (\Exception $e) {
+            Log::error(__CLASS__);
+            Log::error(__FUNCTION__);
+            Log::error($e);
+
+            return response()
+                ->json([
+                    'status_code' => 0,
+                    'message'     => 'Ooops! Something went wrong!',
+                ]);
+        }
     }
 }
