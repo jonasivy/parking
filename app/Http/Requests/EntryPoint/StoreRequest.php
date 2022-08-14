@@ -3,6 +3,7 @@
 namespace App\Http\Requests\EntryPoint;
 
 use App\Rules\EntryPoint\DuplicateRule;
+use App\Rules\EntryPoint\SettingRule;
 use App\Rules\EntryPoint\ValidXAxisRule;
 use App\Rules\EntryPoint\ValidYAxisRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -19,6 +20,7 @@ class StoreRequest extends FormRequest
         return [
             'x-axis' => [
                 'required',
+                new SettingRule(),
                 new ValidXAxisRule($this->input('y-axis')),
                 new DuplicateRule($this->input('y-axis')),
             ],
