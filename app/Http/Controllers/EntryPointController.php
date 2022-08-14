@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EntryPoint\StoreRequest;
+use App\Http\Resources\EntryPoint\IndexCollection;
+use App\Http\Resources\EntryPoint\IndexResource;
+use App\Models\EntryPoint;
 use App\Services\EntryPointService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -28,8 +31,10 @@ class EntryPointController extends Controller
     public function index()
     {
         try {
-            return $this->entryPointService
+            $entryPoints = $this->entryPointService
                 ->getAllEntryPoints();
+
+            return new IndexCollection($entryPoints);
         } catch (\Exception $e) {
             Log::error(__CLASS__);
             Log::error(__FUNCTION__);
@@ -52,11 +57,13 @@ class EntryPointController extends Controller
     public function store(StoreRequest $request)
     {
         try {
-            return $this->entryPointService
+            $entryPoint = $this->entryPointService
                 ->makeEntryPoints(
                     $request->input('x-axis'),
                     $request->input('y-axis')
                 );
+
+            return new IndexResource($entryPoint);
         } catch (\Exception $e) {
             Log::error(__CLASS__);
             Log::error(__FUNCTION__);
@@ -73,37 +80,13 @@ class EntryPointController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param App\Models\EntryPoint $entryPoint
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, EntryPoint $entryPoint)
     {
         try {
-            // TO DO
-        } catch (\Exception $e) {
-            Log::error(__CLASS__);
-            Log::error(__FUNCTION__);
-            Log::error($e);
-
-            return response()
-                ->json([
-                    'status_code' => 0,
-                    'message'     => 'Ooops! Something went wrong!',
-                ]);
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        try {
-            // TO DO
+            return new IndexResource($entryPoint);
         } catch (\Exception $e) {
             Log::error(__CLASS__);
             Log::error(__FUNCTION__);
@@ -123,10 +106,15 @@ class EntryPointController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(EntryPoint $entryPoint)
     {
         try {
-            // TO DO
+            $this->entryPointService->removeEntryPoint($entryPoint);
+
+            return response()
+                ->json([
+                    'message' => 'Deleted',
+                ]);
         } catch (\Exception $e) {
             Log::error(__CLASS__);
             Log::error(__FUNCTION__);
