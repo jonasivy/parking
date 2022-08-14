@@ -42,7 +42,7 @@ class GenerateMapTest extends TestCase
         $this->slotService->generateMap();
 
         $count = $this->slotService->getCountByType('s,m,l')->count();
-        $this->assertEquals($count, 108);
+        $this->assertEquals($count, 216);
     }
 
     /**
@@ -58,7 +58,7 @@ class GenerateMapTest extends TestCase
         $this->slotService->generateMap();
 
         $count = $this->slotService->getCountByType('s,m,l')->count();
-        $this->assertEquals($count, 456);
+        $this->assertEquals($count, 988);
     }
 
     /**
@@ -74,7 +74,7 @@ class GenerateMapTest extends TestCase
         $this->slotService->generateMap();
 
         $count = $this->slotService->getCountByType('s,m,l')->count();
-        $this->assertEquals($count, 1102);
+        $this->assertEquals($count, 2262);
     }
 
     /**
@@ -90,7 +90,7 @@ class GenerateMapTest extends TestCase
         $this->slotService->generateMap();
 
         $count = $this->slotService->getCountByType('s,m,l')->count();
-        $this->assertEquals($count, 2028);
+        $this->assertEquals($count, 4056);
     }
 
     /**
@@ -106,6 +106,6 @@ class GenerateMapTest extends TestCase
         $this->slotService->generateMap();
 
         $count = $this->slotService->getCountByType('s,m,l')->count();
-        $this->assertEquals($count, 3136);
+        $this->assertEquals($count, 6468);
     }
 }

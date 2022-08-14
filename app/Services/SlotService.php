@@ -3,9 +3,14 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use App\Models\Slot;
 use App\Repositories\SettingRepository;
 use App\Repositories\Slot\TypeRepository;
 use App\Repositories\SlotRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class SlotService
 {
@@ -51,7 +56,7 @@ class SlotService
             }
 
             // SKIP IF COORDINATE IS ROAD, MIDDLE ROAD
-            if ($this->isValidYAxis($maxYAxis, $y)) {
+            if (!$this->isValidYAxis($maxYAxis, $y)) {
                 continue;
             }
 
@@ -61,12 +66,58 @@ class SlotService
                     continue;
                 }
 
-                $slotType = $this->getRandomSlotType();
+                $slotType = $this->getOneRandomSlotType();
                 $slots[$slotType->code][] = $this->repository->makeSlot($slotType->id, $x, $y);
             }
         }
 
         return $slots;
+    }
+
+    /**
+     * Get list of parking slots
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Database\Eloquent\Collection
+     */
+    public function getSlotList(Request $request)
+    {
+        return QueryBuilder::for($this->repository->model, $request)
+            ->select([
+                'id',
+                'slot_type_id',
+                'x_axis',
+                'y_axis',
+                DB::raw("ST_Distance_Sphere(POINT(1, 1), POINT(`x_axis`, `y_axis`)) as `distance`"),
+                'created_at'
+            ])
+            ->defaultSort('id')
+            ->allowedSorts([
+                'id',
+                'x_axis',
+                'y_axis',
+                'distance',
+            ])
+            ->allowedFilters([
+                AllowedFilter::scope('type'),
+            ])
+            ->with([
+                'type' => fn ($query) => $query->remember(config('cache.retention')),
+            ])
+            ->paginate($request->input('size'));
+    }
+
+    /**
+     * Get one parking slot by coordinates
+     *
+     * @param int $x
+     * @param int $y
+     * @return \App\Models\Slot
+     */
+    public function getOneByCoordinates($x, $y)
+    {
+        return $this->repository
+            ->getOneByCoordinates($x, $y);
     }
 
     /**
@@ -88,11 +139,11 @@ class SlotService
     }
 
     /**
-     * Get a random slot type
+     * Get a random parking slot type.
      *
      * @return \App\Models\Slot\Type
      */
-    public function getRandomSlotType()
+    public function getOneRandomSlotType()
     {
         return $this->slotTypeRepository
             ->getRandomType();
@@ -120,5 +171,42 @@ class SlotService
     public function dataExists()
     {
         return $this->repository->dataExists();
+    }
+
+    /**
+     * Get one parking slot type by id.
+     *
+     * @param int $id
+     * @return \App\Models\Slot\Type
+     */
+    public function getOneTypeById($id)
+    {
+        return $this->slotTypeRepository
+            ->getOne([
+                'id' => $id,
+            ]);
+    }
+
+    /**
+     * Get one random slot.
+     *
+     * @return \App\Models\Slot
+     */
+    public function getOneRandomSlot()
+    {
+        return $this->repository
+            ->getOneRandom();
+    }
+
+    /**
+     * Update slot type.
+     *
+     * @param \App\Models\Slot $slot
+     */
+    public function changeSlotType(Slot $slot, int $slot_type_id)
+    {
+        return $this->repository->update($slot->id, [
+            'slot_type_id' => $slot_type_id,
+        ]);
     }
 }

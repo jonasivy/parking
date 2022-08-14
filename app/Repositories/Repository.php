@@ -76,11 +76,12 @@ abstract class Repository
      * @param integer $limit
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getOne(array $filter, $orders = [])
+    public function getOne(array $filter, ?array $with = [], ?array $orders = [])
     {
         $query = $this->model
             ->remember(config('cache.retention'))
-            ->where($filter);
+            ->where($filter)
+            ->with($with);
 
         foreach ($orders as $column => $order) {
             $query->orderBy($column, $order);
@@ -145,6 +146,7 @@ abstract class Repository
     {
         return $this->model
             ->where('id', $id)
+            ->first()
             ->update($data);
     }
 

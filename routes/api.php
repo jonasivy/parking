@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('', fn () => response()->json([ 'status' => 'ok', ]));
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -36,5 +38,22 @@ Route::prefix('entry-point')
         Route::delete('{entryPoint}', [
             'as'   => 'entry-point.destroy',
             'uses' => 'EntryPointController@destroy',
+        ]);
+    });
+
+Route::prefix('slot')
+    ->namespace('App\Http\Controllers')
+    ->group(function () {
+        Route::get('', [
+            'as'   => 'slot.get',
+            'uses' => 'SlotController@index',
+        ]);
+        Route::get('{x}/{y}', [
+            'as'   => 'slot.show',
+            'uses' => 'SlotController@show',
+        ]);
+        Route::patch('{x}/{y}', [
+            'as'   => 'slot.update',
+            'uses' => 'SlotController@update',
         ]);
     });
