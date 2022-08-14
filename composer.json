@@ -11,6 +11,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
+        "spatie/laravel-query-builder": "^5.0",
         "watson/rememberable": "^6.0"
     },
     "require-dev": {
