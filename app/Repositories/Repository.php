@@ -154,7 +154,7 @@ abstract class Repository
      */
     public function delete($id)
     {
-        return $this->model->delete($id)
+        return $this->model->where(['id' => $id])->delete()
             ? true
             : false;
     }
