@@ -33,7 +33,6 @@ class EntryPointServiceTest extends TestCase
         ];
 
         $this->settingService = app()->make(SettingService::class);
-
         $this->xAxis = rand(10, 50);
         $this->yAxis = rand(10, 50);
         $this->settingService->setAxis('x', $this->xAxis);
