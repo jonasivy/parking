@@ -43,9 +43,20 @@ class EntryPointRepository extends Repository
      */
     public function getAllEntryPoints()
     {
-        return $this->model
-            ->refresh()
-            ->get();
+        return $this->get([]);
+    }
+
+    /**
+     * Get one entry points.
+     *
+     * @param int $x
+     * @param int $y
+     */
+    public function getEntryPointById(int $id)
+    {
+        return $this->getOne([
+            'id' => $id,
+        ]);
     }
 
     /**
@@ -57,9 +68,20 @@ class EntryPointRepository extends Repository
      */
     public function saveEntryPoint(int $x, int $y)
     {
-        return $this->model->create([
+        return $this->create([
             'x_axis' => $x,
             'y_axis' => $y,
         ]);
+    }
+
+    /**
+     * Remove and existing entry point
+     *
+     * @param \App\Models\EntryPoint $entryPoint
+     * @return bool
+     */
+    public function removeEntryPoint(EntryPoint $entryPoint)
+    {
+        return $this->delete($entryPoint->id);
     }
 }

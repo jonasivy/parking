@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\EntryPoint;
 use App\Repositories\EntryPointRepository;
 
 class EntryPointService
@@ -30,6 +31,18 @@ class EntryPointService
     }
 
     /**
+     * Get one entry point by id.
+     *
+     * @param int $id
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getEntryPointById(int $id)
+    {
+        return $this->entryPointRepository
+            ->getEntryPointById($id);
+    }
+
+    /**
      * Check entry point if already existing.
      *
      * @param int $x
@@ -52,5 +65,17 @@ class EntryPointService
     {
         return $this->entryPointRepository
             ->saveEntryPoint($x, $y);
+    }
+
+    /**
+     * Delete any existing entry point.
+     *
+     * @param \App\Models\EntryPoint $entryPoint
+     * @return bool
+     */
+    public function removeEntryPoint(EntryPoint $entryPoint)
+    {
+        return $this->entryPointRepository
+            ->removeEntryPoint($entryPoint);
     }
 }
