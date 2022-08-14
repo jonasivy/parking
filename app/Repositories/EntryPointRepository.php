@@ -7,6 +7,7 @@ use App\Models\EntryPoint;
 class EntryPointRepository extends Repository
 {
     /**
+     * @param \App\Models\EntryPoint $model
      * @return void
      */
     public function __construct(EntryPoint $model)
@@ -46,8 +47,7 @@ class EntryPointRepository extends Repository
     /**
      * Get one entry points.
      *
-     * @param int $x
-     * @param int $y
+     * @param int $id
      */
     public function getEntryPointById(int $id)
     {
