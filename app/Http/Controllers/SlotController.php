@@ -7,11 +7,15 @@ use App\Http\Requests\Slot\UpdateRequest;
 use App\Http\Resources\Slot\Collection;
 use App\Http\Resources\Slot\Resource;
 use App\Services\SlotService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class SlotController extends Controller
 {
+    /** @var \App\Services\SlotService */
+    protected $slotService;
+
     /**
      * @param \App\Services\SlotService $slotService
      * @return void
@@ -27,7 +31,7 @@ class SlotController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         try {
             $slot = $this->slotService->getSlotList($request);
@@ -52,7 +56,7 @@ class SlotController extends Controller
      * @param \App\Http\Requests\Slot\ShowRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(ShowRequest $request)
+    public function show(ShowRequest $request): JsonResponse
     {
         try {
             $slot = $this->slotService->getOneByCoordinates($request->route('x'), $request->route('y'));
@@ -74,12 +78,12 @@ class SlotController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Slot\UpdateRequest  $request
      * @param int $x
      * @param int $y
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request, int $x, int $y)
+    public function update(UpdateRequest $request, int $x, int $y): JsonResponse
     {
         try {
             $slot = $this->slotService->getOneByCoordinates($x, $y);

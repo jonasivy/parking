@@ -13,6 +13,15 @@ class SlotServiceTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /** @var int */
+    protected $xAxis;
+
+    /** @var int */
+    protected $yAxis;
+
+    /** @var \App\Services\SettingService */
+    protected $settingService;
+
     /**
      * @return void
      */
