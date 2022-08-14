@@ -53,7 +53,7 @@ Route::prefix('slot')
             'uses' => 'SlotController@show',
         ]);
         Route::patch('{x}/{y}', [
-            'as'   => 'slot.patch',
-            'uses' => 'SlotController@modify',
+            'as'   => 'slot.update',
+            'uses' => 'SlotController@update',
         ]);
     });
