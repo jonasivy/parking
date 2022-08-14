@@ -51,7 +51,7 @@ class SlotService
             }
 
             // SKIP IF COORDINATE IS ROAD, MIDDLE ROAD
-            if ($this->isValidYAxis($maxYAxis, $y)) {
+            if (!$this->isValidYAxis($maxYAxis, $y)) {
                 continue;
             }
 
