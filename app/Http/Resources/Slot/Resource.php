@@ -18,11 +18,16 @@ class Resource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'           => $this->id,
-            'slot_type_id' => $this->slot_type_id,
-            'x-axis'       => $this->x_axis,
-            'y-axis'       => $this->y_axis,
-            'created_at'   => $this->created_at->toDateTimeString(),
+            'id'         => $this->id,
+            'type'       => [
+                'id'   => $this->slot_type_id,
+                'code' => $this->type->code,
+                'name' => $this->type->name,
+            ],
+            'x-axis'     => $this->x_axis,
+            'y-axis'     => $this->y_axis,
+            'distance'   => $this->distance,
+            'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
 }
