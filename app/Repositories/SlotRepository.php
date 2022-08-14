@@ -48,6 +48,27 @@ class SlotRepository extends Repository
     }
 
     /**
+     * Get one by coordinates
+     *
+     * @param int $x
+     * @param int $y
+     * @return \App\Models\Slot
+     */
+    public function getOneByCoordinates($x, $y)
+    {
+        return $this->model
+            ->remember(config('cache.retention'))
+            ->where([
+                'x_axis' => $x,
+                'y_axis' => $y,
+            ])
+            ->with([
+                'type' => fn ($query) => $query->remember(config('cache.retention')),
+            ])
+            ->first();
+    }
+
+    /**
      * Check if slots table is has existing data.
      *
      * @return bool
