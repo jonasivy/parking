@@ -38,4 +38,20 @@ class Slot extends Model
     {
         return $this->belongsTo(Type::class, 'slot_type_id');
     }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param string|int $type
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function scopeType($query, $type)
+    {
+        return $query->whereHas('type', function ($query) use ($type) {
+            if (is_numeric($type)) {
+                return $query->where('id', $type);
+            } else {
+                return $query->where('code', $type);
+            }
+        });
+    }
 }
