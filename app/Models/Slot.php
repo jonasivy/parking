@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Slot\Type;
 use App\Traits\Cacheable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,4 +30,12 @@ class Slot extends Model
 
     /** @var string */
     public $rememberCacheTag = 'slot_query';
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo(Type::class, 'slot_type_id');
+    }
 }
