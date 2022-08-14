@@ -6,14 +6,32 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class Repository
 {
-    /**
-     * @param \Illuminate\Database\Eloquent\Model
-     */
+    /** @param \Illuminate\Database\Eloquent\Model */
     protected $model;
 
+    /** @param \Illuminate\Database\Eloquent\Model */
+    protected $freshModel;
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @return void
+     */
     public function __construct(Model $model)
     {
+        $this->freshModel = $model;
         $this->model = $model;
+    }
+
+    /**
+     * Refreshes model.
+     *
+     * @return $this
+     */
+    public function refresh()
+    {
+        $this->model = $this->freshModel;
+
+        return $this;
     }
 
     /**
@@ -85,6 +103,21 @@ abstract class Repository
     }
 
     /**
+     * Create new resource.
+     *
+     * @param array $data
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function firstOrCreate(array $unique, array $data)
+    {
+        return $this->model
+            ->firstOrCreate(
+                $unique,
+                $data
+            );
+    }
+
+    /**
      * Update existing resource.
      *
      * @param mixed $id
@@ -99,6 +132,21 @@ abstract class Repository
     }
 
     /**
+     * Create new resource.
+     *
+     * @param array $data
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function updateOrCreate(array $unique, array $data)
+    {
+        return $this->model
+            ->updateOrCreate(
+                $unique,
+                $data
+            );
+    }
+
+    /**
      * Delete existing resource.
      *
      * @param mixed $id
@@ -106,7 +154,7 @@ abstract class Repository
      */
     public function delete($id)
     {
-        return $this->model->delete($id)
+        return $this->model->where(['id' => $id])->delete()
             ? true
             : false;
     }
