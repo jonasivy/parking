@@ -35,7 +35,9 @@ class SlotService
     }
 
     /**
-     * @return void
+     * Generate slots based on map size x and y axis.
+     *
+     * @return array
      */
     public function generateMap()
     {
@@ -43,15 +45,18 @@ class SlotService
         $maxYAxis = $this->settingRepository->getYAxis();
 
         foreach (range(1, $maxYAxis->value) as $y) {
+            // SKIP IF COORDINATE IS ROAD, TOP AND BOTTOM ROAD
             if (1 == $y || $maxYAxis->value == $y) {
                 continue;
             }
 
+            // SKIP IF COORDINATE IS ROAD, MIDDLE ROAD
             if ($this->isValidYAxis($maxYAxis, $y)) {
                 continue;
             }
 
             foreach (range(1, $maxXAxis->value) as $x) {
+                // SKIP IF COORDINATE IS ROAD, LEFT AND RIGHT ROAD
                 if (1 == $x || $maxXAxis->value == $x) {
                     continue;
                 }
@@ -107,6 +112,11 @@ class SlotService
             ->getCountSummaryPerType($codes);
     }
 
+    /**
+     * Check if slots table has existing data
+     *
+     * @return bool
+     */
     public function dataExists()
     {
         return $this->repository->dataExists();

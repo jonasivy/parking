@@ -7,6 +7,7 @@ use App\Models\Slot;
 class SlotRepository extends Repository
 {
     /**
+     * @param \App\Models\Slot $model
      * @return void
      */
     public function __construct(Slot $model)
@@ -32,6 +33,8 @@ class SlotRepository extends Repository
     }
 
     /**
+     * Get count summary per type.
+     *
      * @param array $types
      */
     public function getCountSummaryPerType(array $types)
@@ -45,6 +48,8 @@ class SlotRepository extends Repository
     }
 
     /**
+     * Check if slots table is has existing data.
+     *
      * @return bool
      */
     public function dataExists()

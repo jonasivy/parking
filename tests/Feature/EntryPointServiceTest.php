@@ -2,11 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Services\EntryPointService;
 use App\Services\SettingService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EntryPointServiceTest extends TestCase
@@ -33,8 +30,8 @@ class EntryPointServiceTest extends TestCase
         ];
 
         $this->settingService = app()->make(SettingService::class);
-        $this->xAxis = rand(10, 50);
-        $this->yAxis = rand(10, 50);
+        $this->xAxis = rand(10, 100);
+        $this->yAxis = rand(10, 100);
         $this->settingService->setAxis('x', $this->xAxis);
         $this->settingService->setAxis('y', $this->yAxis);
     }
@@ -44,6 +41,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function positiveTestEntryTopHorizontal()
     {
+        $this->xAxis = rand(10, 100);
+        $this->yAxis = rand(10, 100);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(1, $this->xAxis) as $x) {
             $params = [
                 'x-axis' => $x,
@@ -66,6 +68,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function positiveTestEntryBottomHorizontal()
     {
+        $this->xAxis = rand(10, 100);
+        $this->yAxis = rand(10, 100);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(1, $this->xAxis) as $x) {
             $params = [
                 'x-axis' => $x,
@@ -88,6 +95,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function positiveTestEntryLeftVertical()
     {
+        $this->xAxis = rand(10, 100);
+        $this->yAxis = rand(10, 100);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(1, $this->yAxis) as $y) {
             $params = [
                 'x-axis' => $this->settingService->getAxis('x')->value,
@@ -110,6 +122,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function positiveTestEntryRightVertical()
     {
+        $this->xAxis = rand(10, 100);
+        $this->yAxis = rand(10, 100);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(1, $this->yAxis) as $y) {
             $params = [
                 'x-axis' => 1,
@@ -132,6 +149,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function negativeTestInvalidAxisY()
     {
+        $this->xAxis = rand(10, 20);
+        $this->yAxis = rand(10, 20);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(2, $this->yAxis - 1) as $y) {
             foreach (range(2, $this->xAxis -1) as $x) {
                 $params = [
@@ -152,6 +174,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function negativeTestInvalidAxisX()
     {
+        $this->xAxis = rand(10, 20);
+        $this->yAxis = rand(10, 20);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(2, $this->xAxis -1) as $x) {
             foreach (range(2, $this->yAxis - 1) as $y) {
                 $params = [
@@ -172,6 +199,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function positiveTestEntryPointDelete()
     {
+        $this->xAxis = rand(10, 100);
+        $this->yAxis = rand(10, 100);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(1, $this->xAxis) as $x) {
             $params = [
                 'x-axis' => $x,
@@ -202,6 +234,11 @@ class EntryPointServiceTest extends TestCase
      */
     public function negativeTestEntryPointDelete()
     {
+        $this->xAxis = rand(10, 100);
+        $this->yAxis = rand(10, 100);
+        $this->settingService->setAxis('x', $this->xAxis);
+        $this->settingService->setAxis('y', $this->yAxis);
+
         foreach (range(1, 10) as $x) {
             $response = $this->delete(route('entry-point.destroy', [ 'entryPoint' => $x ]), [], $this->headers);
             $response->assertStatus(404)

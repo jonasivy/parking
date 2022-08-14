@@ -8,6 +8,7 @@ use App\Repositories\Repository;
 class TypeRepository extends Repository
 {
     /**
+     * @param \App\Models\Slot\Type $model
      * @return void
      */
     public function __construct(Type $model)
@@ -16,6 +17,8 @@ class TypeRepository extends Repository
     }
 
     /**
+     * Get one random slot type.
+     *
      * @return \App\Models\Slot\Type
      */
     public function getRandomType()
