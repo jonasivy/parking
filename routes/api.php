@@ -57,3 +57,28 @@ Route::prefix('slot')
             'uses' => 'SlotController@update',
         ]);
     });
+
+Route::prefix('parking')
+    ->namespace('App\Http\Controllers')
+    ->group(function () {
+        Route::get('', [
+            'as'   => 'parking.list',
+            'uses' => 'ParkingController@index',
+        ]);
+        Route::get('{parking}', [
+            'as'   => 'parking.show',
+            'uses' => 'ParkingController@show',
+        ]);
+        Route::post('', [
+            'as'   => 'parking.store',
+            'uses' => 'ParkingController@store',
+        ]);
+        Route::patch('{parking}', [
+            'as'   => 'parking.patch',
+            'uses' => 'ParkingController@patch',
+        ]);
+        Route::delete('{parking}', [
+            'as'   => 'parking.delete',
+            'uses' => 'ParkingController@delete',
+        ]);
+    });
