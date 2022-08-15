@@ -23,6 +23,16 @@ class Slot extends Model
         'slot_type_id',
         'x_axis',
         'y_axis',
+        'is_occupied',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_occupied' => 'boolean',
     ];
 
     /** @var string */
@@ -53,5 +63,23 @@ class Slot extends Model
                 return $query->where('code', $type);
             }
         });
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function scopeOccupied($query)
+    {
+        return $query->where('is_occupied', true);
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function scopeVacant($query)
+    {
+        return $query->where('is_occupied', false);
     }
 }
