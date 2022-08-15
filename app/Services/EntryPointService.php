@@ -8,7 +8,7 @@ use App\Repositories\EntryPointRepository;
 class EntryPointService
 {
     /** @var \App\Repositories\EntryPointRepository */
-    protected $entryPointRepository;
+    protected $repository;
 
     /**
      * @param \App\Repositories\EntryPointRepository $repository
@@ -16,7 +16,7 @@ class EntryPointService
      */
     public function __construct(EntryPointRepository $repository)
     {
-        $this->entryPointRepository = $repository;
+        $this->repository = $repository;
     }
 
     /**
@@ -26,7 +26,7 @@ class EntryPointService
      */
     public function getAllEntryPoints()
     {
-        return $this->entryPointRepository
+        return $this->repository
             ->getAllEntryPoints();
     }
 
@@ -38,7 +38,7 @@ class EntryPointService
      */
     public function getEntryPointById(int $id)
     {
-        return $this->entryPointRepository
+        return $this->repository
             ->getEntryPointById($id);
     }
 
@@ -50,7 +50,7 @@ class EntryPointService
      */
     public function isExists(int $x, int $y)
     {
-        return $this->entryPointRepository
+        return $this->repository
             ->isExists($x, $y);
     }
 
@@ -63,7 +63,7 @@ class EntryPointService
      */
     public function makeEntryPoints(int $x, int $y)
     {
-        return $this->entryPointRepository
+        return $this->repository
             ->saveEntryPoint($x, $y);
     }
 
@@ -75,7 +75,18 @@ class EntryPointService
      */
     public function removeEntryPoint(EntryPoint $entryPoint)
     {
-        return $this->entryPointRepository
+        return $this->repository
             ->removeEntryPoint($entryPoint);
+    }
+
+    /**
+     * Get one random entry point.
+     *
+     * @return \App\Models\EntryPoint
+     */
+    public function getOneRandomEntryPoint()
+    {
+        return $this->repository
+            ->getOneRandomEntryPoint();
     }
 }
