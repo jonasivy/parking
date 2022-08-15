@@ -23,12 +23,12 @@ return new class extends Migration
             $table->unsignedTinyInteger('vehicle_type_id');
             $table->string('plate_no');
             $table->decimal('initial_parking_fee', 20, 6);
-            $table->decimal('succeeding_parking_fee', 20, 6);
-            $table->decimal('day_fee', 20, 6);
+            $table->decimal('succeeding_parking_fee', 20, 6)->nullable();
+            $table->decimal('day_fee', 20, 6)->nullable();
             $table->unsignedBigInteger('parked_log_id')->index();
             $table->timestamp('parked_at');
-            $table->unsignedBigInteger('unparked_log_id')->index();
-            $table->timestamp('unparked_at');
+            $table->unsignedBigInteger('unparked_log_id')->index()->nullable();
+            $table->timestamp('unparked_at')->nullable();
             $table->timestamps();
         });
     }
