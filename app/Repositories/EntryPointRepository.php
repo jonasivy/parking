@@ -81,4 +81,14 @@ class EntryPointRepository extends Repository
     {
         return $this->delete($entryPoint->id);
     }
+
+    /**
+     * Get one random entry point.
+     *
+     * @return \App\Models\EntryPoint
+     */
+    public function getOneRandomEntryPoint()
+    {
+        return $this->getOneRandom();
+    }
 }
