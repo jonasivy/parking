@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('txn_id');
+            $table->string('txn_id')->unique();
             $table->string('txn_ref_id');
             $table->unsignedInteger('entry_point_id');
             $table->unsignedInteger('slot_id');
