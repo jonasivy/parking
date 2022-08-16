@@ -29,6 +29,7 @@ return new class extends Migration
             $table->timestamp('parked_at');
             $table->unsignedBigInteger('unparked_log_id')->index()->nullable();
             $table->timestamp('unparked_at')->nullable();
+            $table->tinyInteger('status_flag')->default(0)->index();
             $table->timestamps();
         });
     }
