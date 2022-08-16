@@ -20,6 +20,20 @@ class EntryPointService
     }
 
     /**
+     * Get on entry point by id.
+     *
+     * @param int $id
+     * @return \App\Models\EntryPoint
+     */
+    public function getOneById($id)
+    {
+        return $this->repository
+            ->getOne([
+                'id' => $id,
+            ]);
+    }
+
+    /**
      * Get all saved entry point.
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -36,7 +50,7 @@ class EntryPointService
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getEntryPointById(int $id)
+    public function getEntryPointById($id)
     {
         return $this->repository
             ->getEntryPointById($id);
