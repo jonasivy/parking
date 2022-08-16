@@ -49,7 +49,7 @@ class EntryPointRepository extends Repository
      *
      * @param int $id
      */
-    public function getEntryPointById(int $id)
+    public function getEntryPointById($id)
     {
         return $this->getOne([
             'id' => $id,
