@@ -86,4 +86,12 @@ class Transaction extends Model
     {
         return $this->belongsTo(VehicleType::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parkLog()
+    {
+        return $this->belongsTo(Log::class, 'parked_log_id');
+    }
 }
