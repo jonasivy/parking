@@ -17,6 +17,18 @@ class TypeRepository extends Repository
     }
 
     /**
+     * Get one vehicle type by id
+     *
+     * @param int $id
+     */
+    public function getOneById($id)
+    {
+        return $this->getOne([
+            'id' => $id,
+        ]);
+    }
+
+    /**
      * Get one random slot type.
      *
      * @return \App\Models\Slot\Type
