@@ -7,7 +7,6 @@ use App\Http\Requests\Slot\UpdateRequest;
 use App\Http\Resources\Slot\Collection;
 use App\Http\Resources\Slot\Resource;
 use App\Services\SlotService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -31,7 +30,7 @@ class SlotController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): Collection
     {
         try {
             $slot = $this->slotService->getSlotList($request);
