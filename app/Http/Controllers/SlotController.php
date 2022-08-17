@@ -30,7 +30,7 @@ class SlotController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request): Collection
+    public function index(Request $request)
     {
         try {
             $slot = $this->slotService->getSlotList($request);
@@ -55,7 +55,7 @@ class SlotController extends Controller
      * @param \App\Http\Requests\Slot\ShowRequest $request
      * @return \App\Http\Resources\Slot\Resource
      */
-    public function show(ShowRequest $request): Resource
+    public function show(ShowRequest $request)
     {
         try {
             $slot = $this->slotService->getOneByCoordinates($request->route('x'), $request->route('y'));
@@ -82,7 +82,7 @@ class SlotController extends Controller
      * @param int $y
      * @return \App\Http\Resources\Slot\Resource
      */
-    public function update(UpdateRequest $request, int $x, int $y): Resource
+    public function update(UpdateRequest $request, int $x, int $y)
     {
         try {
             $slot = $this->slotService->getOneByCoordinates($x, $y);
