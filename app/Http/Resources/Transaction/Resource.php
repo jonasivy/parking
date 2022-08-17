@@ -42,15 +42,18 @@ class Resource extends JsonResource
         ];
 
         return [
-            'txn_id'              => $this->txn_id,
-            'txn_ref_id'          => $this->txn_ref_id,
-            'plate_no'            => $this->plate_no,
-            'initial_parking_fee' => $this->initial_parking_fee,
-            'parked_at'           => $this->parked_at,
-            'entry_point'         => $entryPoint,
-            'slot'                => $slot,
-            'slot_type'           => $slotType,
-            'vehicle_type'        => $vehicleType,
+            'id'                     => $this->id,
+            'txn_id'                 => $this->txn_id,
+            'txn_ref_id'             => $this->txn_ref_id,
+            'plate_no'               => $this->plate_no,
+            'initial_parking_fee'    => $this->initial_parking_fee,
+            'succeeding_parking_fee' => $this->exit->succeeding_parking_fee ?? 0,
+            'day_fee'                => $this->exit->day_fee ?? 0,
+            'parked_at'              => $this->parked_at,
+            'entry_point'            => $entryPoint,
+            'slot'                   => $slot,
+            'slot_type'              => $slotType,
+            'vehicle_type'           => $vehicleType,
         ];
     }
 }
