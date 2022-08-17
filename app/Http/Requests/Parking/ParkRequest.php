@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Parking;
 
 use App\Rules\EntryPoint\ExistRule;
+use App\Rules\Parking\PlateNoFormatRule;
 use App\Rules\Parking\PlateNoRule;
 use App\Rules\Parking\TransactionRule;
 use App\Rules\VehicleType\ExistRule as VehicleTypeExistRule;
@@ -28,6 +29,7 @@ class ParkRequest extends Request
             'plate_no' => [
                 'required',
                 new PlateNoRule(),
+                new PlateNoFormatRule(),
             ],
             'vehicle_type_id' => [
                 'required',
