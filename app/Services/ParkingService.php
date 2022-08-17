@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Repositories\ParkingRepository;
 use App\Repositories\Vehicle\TypeRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ParkingService
@@ -69,6 +70,19 @@ class ParkingService
     }
 
     /**
+     * Check if vehicle is already parked by plate no.
+     *
+     * @param string $plateNo
+     */
+    public function checkIfVehicleIsParked(string $plateNo)
+    {
+        return $this->repository->getOne([
+            'plate_no' => $plateNo,
+            'status_flag'   => 0,
+        ]);
+    }
+
+    /**
      * Park vehicle to the nearest available slot.
      *
      * @param \App\Models\Log $log
@@ -79,28 +93,31 @@ class ParkingService
         if ($exitTransaction = $this->repository->getReEnterTransaction($log->request['plate_no'])) {
             $enterTransaction = $exitTransaction->enter;
             $exitTransaction->delete();
+            $enterTransaction->update([
+                'status_flag' => 0,
+            ]);
             
             return $enterTransaction;
+        } else {
+            $entryPoint = $this->entryPointService->getOneById($log->request['entry_point_id']);
+            $slot = $this->slotService->getOneSlotByEntryPointAndVehicleType(
+                $entryPoint->x_axis,
+                $entryPoint->y_axis,
+                $log->request['vehicle_type_id'],
+            );
+            $initialParkingFee = (float) SlotType::fromKey('INITIAL')->value;
+    
+            return $this->repository->saveParkingTransaction(
+                $log->request['txn_id'],
+                Str::uuid()->toString(),
+                $log->request['entry_point_id'],
+                $slot,
+                $log->request['vehicle_type_id'],
+                $log->request['plate_no'],
+                $initialParkingFee,
+                $log->id,
+            );
         }
-
-        $entryPoint = $this->entryPointService->getOneById($log->request['entry_point_id']);
-        $slot = $this->slotService->getOneSlotByEntryPointAndVehicleType(
-            $entryPoint->x_axis,
-            $entryPoint->y_axis,
-            $log->request['vehicle_type_id'],
-        );
-        $initialParkingFee = (float) SlotType::fromKey('INITIAL')->value;
-
-        return $this->repository->saveParkingTransaction(
-            $log->request['txn_id'],
-            Str::uuid()->toString(),
-            $log->request['entry_point_id'],
-            $slot,
-            $log->request['vehicle_type_id'],
-            $log->request['plate_no'],
-            $initialParkingFee,
-            $log->id,
-        );
     }
 
     /**
@@ -114,8 +131,13 @@ class ParkingService
         $succeedingFee = $this->getSucceedingFee($parking->parked_at, $parking->slotType);
         $dayFee = $this->getDayFee($parking->parked_at, $parking->slotType);
 
-        return $this->repository
-            ->saveUnparkingTransaction($log, $parking, $succeedingFee, $dayFee);
+        return DB::transaction(function () use ($log, $parking, $succeedingFee, $dayFee) {
+            $this->repository
+                ->updateStatusByTransRefId($parking->txn_ref_id);
+            
+            return $this->repository
+                ->saveUnparkingTransaction($log, $parking, $succeedingFee, $dayFee);
+        });
     }
 
     /**
@@ -128,7 +150,7 @@ class ParkingService
         $parkedAt = Carbon::parse($parkedAt);
         $diffInMinutes = $parkedAt->diffInMinutes($now->toDateTimeString());
         $hours = $diffInMinutes
-            ? ceil($diffInMinutes/60) % 24
+            ? max((ceil($diffInMinutes/60) - 3), 0) % 24
             : 0;
 
         return $hours * $fee;
