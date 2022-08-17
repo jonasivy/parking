@@ -15,6 +15,8 @@ class SettingRepository extends Repository
     }
 
     /**
+     * Get map settings x axis.
+     *
      * @return \App\Models\Setting
      */
     public function getXAxis()
@@ -37,6 +39,8 @@ class SettingRepository extends Repository
     }
 
     /**
+     * Set map setting x axis.
+     *
      * @param string $value
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -50,6 +54,8 @@ class SettingRepository extends Repository
     }
 
     /**
+     * Set map settings y axis.
+     *
      * @param string $value
      * @return \Illuminate\Database\Eloquent\Collection
      */

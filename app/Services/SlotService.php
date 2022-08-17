@@ -5,8 +5,9 @@ namespace App\Services;
 use App\Models\Setting;
 use App\Models\Slot;
 use App\Repositories\SettingRepository;
-use App\Repositories\Slot\TypeRepository;
+use App\Repositories\Slot\TypeRepository as SlotTypeRepository;
 use App\Repositories\SlotRepository;
+use App\Repositories\Vehicle\TypeRepository as VehicleTypeRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -17,26 +18,32 @@ class SlotService
     /** @var \App\Repositories\SlotRepository */
     protected $repository;
 
-    /** @var \App\Repositories\Slot\TypeRepository */
-    protected $slotTypeRepository;
-
     /** @var \App\Repositories\SettingRepository */
     protected $settingRepository;
 
+    /** @var \App\Repositories\Slot\TypeRepository */
+    protected $slotTypeRepository;
+
+    /** @var \App\Repositories\Vehicle\TypeRepository */
+    protected $vehicleTypeRepository;
+
     /**
      * @param \App\Repositories\SlotRepository $repository
-     * @param \App\Repositories\Slot\TypeRepository $typeRepository
+     * @param \App\Repositories\Slot\TypeRepository $slotTypeRepository
      * @param \App\Repositories\SettingRepository $settingRepository
+     * @param \App\Repositories\Vehicle\TypeRepository $vehicleTypeRepository
      * @return void
      */
     public function __construct(
         SlotRepository $repository,
-        TypeRepository $slotTypeRepository,
-        SettingRepository $settingRepository
+        SlotTypeRepository $slotTypeRepository,
+        SettingRepository $settingRepository,
+        VehicleTypeRepository $vehicleTypeRepository
     ) {
         $this->repository = $repository;
-        $this->slotTypeRepository = $slotTypeRepository;
         $this->settingRepository = $settingRepository;
+        $this->slotTypeRepository = $slotTypeRepository;
+        $this->vehicleTypeRepository = $vehicleTypeRepository;
     }
 
     /**
@@ -105,6 +112,22 @@ class SlotService
                 'type' => fn ($query) => $query->remember(config('cache.retention')),
             ])
             ->paginate($request->input('size'));
+    }
+
+    /**
+     * Get one nearest by entry point and vehicle type id
+     *
+     * @param int $x
+     * @param int $y
+     * @param int $vehicleTypeId
+     * @return \App\Models\Slot
+     */
+    public function getOneSlotByEntryPointAndVehicleType(int $x, int $y, int $vehicleTypeId)
+    {
+        $vehicleType = $this->vehicleTypeRepository->getOneById($vehicleTypeId);
+
+        return $this->repository
+            ->getOneSlotByEntryPointAndVehicleType($x, $y, strtolower($vehicleType->name));
     }
 
     /**

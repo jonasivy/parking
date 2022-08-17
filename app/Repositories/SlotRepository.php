@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Slot;
+use Illuminate\Support\Facades\DB;
 
 class SlotRepository extends Repository
 {
@@ -45,6 +46,34 @@ class SlotRepository extends Repository
                     ->whereIn('code', array_map(fn ($value) => strToUpper($value), $types));
             })
             ->get();
+    }
+
+    /**
+     * Get one nearest to given point
+     *
+     * @param int $x
+     * @param int $y
+     * @param string $vehicleScope
+     * @return \App\Models\Slot
+     */
+    public function getOneSlotByEntryPointAndVehicleType(int $x, int $y, string $vehicleScope)
+    {
+        return $this->model
+            ->select([
+                'id',
+                'slot_type_id',
+                'x_axis',
+                'y_axis',
+                DB::raw("ST_Distance_Sphere(POINT({$x}, {$y}), POINT(`x_axis`, `y_axis`)) as `distance`"),
+                'created_at',
+            ])
+            ->vacant()
+            ->{$vehicleScope}()
+            ->with([
+                'type' => fn ($query) => $query->remember(config('cache.retention')),
+            ])
+            ->orderBy(DB::raw("ST_Distance_Sphere(POINT({$x}, {$y}), POINT(`x_axis`, `y_axis`))"))
+            ->first();
     }
 
     /**

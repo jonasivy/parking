@@ -7,6 +7,7 @@ use App\Models\EntryPoint;
 class EntryPointRepository extends Repository
 {
     /**
+     * @param \App\Models\EntryPoint $model
      * @return void
      */
     public function __construct(EntryPoint $model)
@@ -46,10 +47,9 @@ class EntryPointRepository extends Repository
     /**
      * Get one entry points.
      *
-     * @param int $x
-     * @param int $y
+     * @param int $id
      */
-    public function getEntryPointById(int $id)
+    public function getEntryPointById($id)
     {
         return $this->getOne([
             'id' => $id,
@@ -80,5 +80,15 @@ class EntryPointRepository extends Repository
     public function removeEntryPoint(EntryPoint $entryPoint)
     {
         return $this->delete($entryPoint->id);
+    }
+
+    /**
+     * Get one random entry point.
+     *
+     * @return \App\Models\EntryPoint
+     */
+    public function getOneRandomEntryPoint()
+    {
+        return $this->getOneRandom();
     }
 }

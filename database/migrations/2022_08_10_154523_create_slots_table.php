@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('slot_type_id')->index();
             $table->unsignedInteger('x_axis')->index();
             $table->unsignedInteger('y_axis')->index();
+            $table->boolean('is_occupied')->default(false);
             $table->timestamps();
 
             $table->unique([

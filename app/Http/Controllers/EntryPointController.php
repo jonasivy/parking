@@ -80,7 +80,8 @@ class EntryPointController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param App\Models\EntryPoint $entryPoint
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\EntryPoint $entryPoint
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, EntryPoint $entryPoint)
@@ -103,7 +104,7 @@ class EntryPointController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param \App\Models\EntryPoint $entryPoint
      * @return \Illuminate\Http\Response
      */
     public function destroy(EntryPoint $entryPoint)
