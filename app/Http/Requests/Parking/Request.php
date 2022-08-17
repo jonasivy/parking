@@ -5,6 +5,7 @@ namespace App\Http\Requests\Parking;
 use App\Services\LogService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
 class Request extends FormRequest
@@ -47,8 +48,10 @@ class Request extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
+        $response = $this->getValidatorInstance()->errors()->messages();
+
         $this->log->update([
-            'response' => $this->getValidatorInstance()->errors()->messages(),
+            'response' => $response,
         ]);
 
         throw (new ValidationException($validator))
