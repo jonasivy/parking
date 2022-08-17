@@ -2,10 +2,24 @@
 
 namespace App\Rules\Parking;
 
+use App\Services\ParkingService;
 use Illuminate\Contracts\Validation\Rule;
 
 class PlateNoRule implements Rule
 {
+    /** @var \App\Services\ParkingService */
+    protected $parkingService;
+
+    /**
+     * Create a new rule instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->parkingService = app()->make(ParkingService::class);
+    }
+
     /**
      * Determine if the validation rule passes.
      *
@@ -15,12 +29,13 @@ class PlateNoRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $pattern = '/[A-Za-z]{3}[0-9]{3}/';
-        if (empty(preg_match($pattern, $value, $matches))) {
-            return false;
+        $status = true;
+        
+        if ($this->parkingService->checkIfVehicleIsParked($value)) {
+            $status = false;
         }
 
-        return true;
+        return $status;
     }
 
     /**
@@ -32,6 +47,6 @@ class PlateNoRule implements Rule
     {
         $plateNo = request()->input('plate_no');
 
-        return "The :attribute {$plateNo} is not valid.";
+        return "The :attribute {$plateNo} is already parked.";
     }
 }

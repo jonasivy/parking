@@ -155,27 +155,4 @@ class ParkingController extends Controller
                 ]);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        try {
-            // TO DO
-        } catch (\Exception $e) {
-            Log::error(__CLASS__);
-            Log::error(__FUNCTION__);
-            Log::error($e);
-
-            return response()
-                ->json([
-                    'status_code' => 0,
-                    'message'     => 'Ooops! Something went wrong!',
-                ]);
-        }
-    }
 }
