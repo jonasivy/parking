@@ -141,7 +141,10 @@ class ParkingService
     }
 
     /**
-     * @param
+     * Get succeeding fee.
+     *
+     * @param string $parkedAt
+     * @param \App\Models\Slot\Type $slotType
      */
     public function getSucceedingFee($parkedAt, $slotType)
     {
@@ -157,7 +160,9 @@ class ParkingService
     }
 
     /**
-     * @param
+     * Get day fee, overnight fee.
+     *
+     * @param string $parkedAt
      */
     public function getDayFee($parkedAt)
     {
