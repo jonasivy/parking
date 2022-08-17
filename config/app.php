@@ -212,4 +212,10 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    /**
+     * Parking ENV
+     */
+    'parking' => [
+        'exit-grace' => env('PARKING_EXIT_GRACE', -60),
+    ],
 ];
