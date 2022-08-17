@@ -71,7 +71,7 @@ class ParkingRepository extends Repository
             ->refresh()
             ->where('type', TransactionType::fromKey('EXIT')->value)
             ->where('plate_no', $plateNo)
-            ->where('unparked_at', '>=', $reEnterDateCondition)
+            ->where('unparked_at', '>=', $reEnterDateCondition->toDateTimeString())
             ->first();
     }
 
@@ -103,6 +103,26 @@ class ParkingRepository extends Repository
             'parked_at'              => $parking->parked_at,
             'unparked_log_id'        => $log->id,
             'unparked_at'            => Carbon::now()->toDateTimeString(),
+            'status_flag'            => true,
         ]);
+    }
+
+    /**
+     * Update status by reference id.
+     *
+     * @param string $txn_ref_id
+     * @return bool
+     */
+    public function updateStatusByTransRefId(string $txnRefId)
+    {
+        $txns = $this->get([
+            'txn_ref_id' => $txnRefId,
+        ]);
+
+        foreach ($txns as $txn) {
+            $txn->update([
+                'status_flag' => true,
+            ]);
+        }
     }
 }
