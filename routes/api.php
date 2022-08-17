@@ -70,12 +70,12 @@ Route::prefix('parking')
             'uses' => 'ParkingController@show',
         ]);
         Route::post('', [
-            'as'   => 'parking.store',
-            'uses' => 'ParkingController@store',
+            'as'   => 'parking.park',
+            'uses' => 'ParkingController@park',
         ]);
         Route::patch('{parking}', [
-            'as'   => 'parking.patch',
-            'uses' => 'ParkingController@patch',
+            'as'   => 'parking.unpark',
+            'uses' => 'ParkingController@unpark',
         ]);
         Route::delete('{parking}', [
             'as'   => 'parking.delete',

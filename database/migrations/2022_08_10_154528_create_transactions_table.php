@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('txn_id')->unique();
-            $table->string('txn_ref_id');
+            $table->string('type')->index();
+            $table->string('txn_id')->index();
+            $table->string('txn_ref_id')->index();
             $table->unsignedInteger('entry_point_id');
             $table->unsignedInteger('slot_id');
             $table->unsignedTinyInteger('slot_type_id');
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->timestamp('unparked_at')->nullable();
             $table->tinyInteger('status_flag')->default(0)->index();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

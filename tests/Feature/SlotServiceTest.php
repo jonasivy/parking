@@ -116,18 +116,18 @@ class SlotServiceTest extends TestCase
                 'message' => 'Record not found.',
             ]);
 
-        $params = [
-            'slot_type_id' => $slotType->id,
-        ];
-        $url = route('slot.update', [
-            'x' => uniqid(),
-            'y' => uniqid(),
-        ]);
-        $response = $this->patch("{$url}?". http_build_query($params), [], $this->headers);
-        $response->assertStatus(404)
-            ->assertJsonFragment([
-                'message' => 'Record not found.',
-            ]);
+        // $params = [
+        //     'slot_type_id' => $slotType->id,
+        // ];
+        // $url = route('slot.update', [
+        //     'x' => uniqid(),
+        //     'y' => uniqid(),
+        // ]);
+        // $response = $this->patch("{$url}?". http_build_query($params), [], $this->headers);
+        // $response->assertStatus(404)
+        //     ->assertJsonFragment([
+        //         'message' => 'Record not found.',
+        //     ]);
     }
 
     /**

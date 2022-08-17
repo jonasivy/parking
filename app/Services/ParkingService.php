@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Enums\SlotType;
 use App\Models\Log;
+use App\Models\Transaction;
 use App\Repositories\ParkingRepository;
 use App\Repositories\Vehicle\TypeRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class ParkingService
@@ -40,6 +43,19 @@ class ParkingService
     }
 
     /**
+     * Get one transaction by id.
+     *
+     * @param int $id
+     * @return \App\Models\Transaction
+     */
+    public function getOneById($id)
+    {
+        return $this->repository
+            ->refresh()
+            ->find($id);
+    }
+
+    /**
      * Get one transaction by transaction id.
      *
      * @param string $txnId
@@ -60,15 +76,22 @@ class ParkingService
      */
     public function park(Log $log)
     {
+        if ($exitTransaction = $this->repository->getReEnterTransaction($log->request['plate_no'])) {
+            $enterTransaction = $exitTransaction->enter;
+            $exitTransaction->delete();
+            
+            return $enterTransaction;
+        }
+
         $entryPoint = $this->entryPointService->getOneById($log->request['entry_point_id']);
         $slot = $this->slotService->getOneSlotByEntryPointAndVehicleType(
             $entryPoint->x_axis,
             $entryPoint->y_axis,
             $log->request['vehicle_type_id'],
         );
-        $initialParkingFee = 40;
+        $initialParkingFee = (float) SlotType::fromKey('INITIAL')->value;
 
-        return $this->repository->saveTransaction(
+        return $this->repository->saveParkingTransaction(
             $log->request['txn_id'],
             Str::uuid()->toString(),
             $log->request['entry_point_id'],
@@ -82,10 +105,49 @@ class ParkingService
 
     /**
      * Unpark vehicle.
+     *
+     * @param \App\Models\Log $log
+     * @param \App\Models\Transaction $paring
      */
-    public function unpark()
+    public function unpark(Log $log, $parking)
     {
-        // TO DO
+        $succeedingFee = $this->getSucceedingFee($parking->parked_at, $parking->slotType);
+        $dayFee = $this->getDayFee($parking->parked_at, $parking->slotType);
+
+        return $this->repository
+            ->saveUnparkingTransaction($log, $parking, $succeedingFee, $dayFee);
+    }
+
+    /**
+     * @param
+     */
+    public function getSucceedingFee($parkedAt, $slotType)
+    {
+        $fee = (int) SlotType::fromKey(strToUpper($slotType->name))->value;
+        $now = Carbon::now();
+        $parkedAt = Carbon::parse($parkedAt);
+        $diffInMinutes = $parkedAt->diffInMinutes($now->toDateTimeString());
+        $hours = $diffInMinutes
+            ? ceil($diffInMinutes/60) % 24
+            : 0;
+
+        return $hours * $fee;
+    }
+
+    /**
+     * @param
+     */
+    public function getDayFee($parkedAt)
+    {
+        $fee = (int) SlotType::fromKey('DAY')->value;
+        $now = Carbon::now();
+        $parkedAt = Carbon::parse($parkedAt);
+        $diffInMinutes = $parkedAt->diffInMinutes($now->toDateTimeString());
+        $days = $diffInMinutes
+            ? floor(ceil($diffInMinutes / 60) / 24)
+            : 0;
+
+        return $days * $fee;
     }
 
     /**

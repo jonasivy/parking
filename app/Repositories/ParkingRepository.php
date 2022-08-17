@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Enums\TransactionType;
+use App\Models\Log;
 use App\Models\Slot;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -29,7 +31,7 @@ class ParkingRepository extends Repository
      * @param float $initialParkingFee
      * @param int $parkedLogId
      */
-    public function saveTransaction(
+    public function saveParkingTransaction(
         string $txnId,
         string $txnRefId,
         int $entryPointId,
@@ -40,17 +42,67 @@ class ParkingRepository extends Repository
         int $parkedLogId,
     ) {
         return $this->firstOrCreate([
-            'txn_id'              => $txnId,
-            'txn_ref_id'          => $txnRefId,
+            'txn_id'                 => $txnId,
+            'txn_ref_id'             => $txnRefId,
         ], [
-            'entry_point_id'      => $entryPointId,
-            'slot_id'             => $slot->id,
-            'slot_type_id'        => $slot->slot_type_id,
-            'vehicle_type_id'     => $vehicleTypeId,
-            'plate_no'            => $plateNo,
-            'initial_parking_fee' => $initialParkingFee,
-            'parked_log_id'       => $parkedLogId,
-            'parked_at'           => Carbon::now()->toDateTimeString(),
+            'type'                   => TransactionType::fromKey('ENTER')->value,
+            'entry_point_id'         => $entryPointId,
+            'slot_id'                => $slot->id,
+            'slot_type_id'           => $slot->slot_type_id,
+            'vehicle_type_id'        => $vehicleTypeId,
+            'plate_no'               => $plateNo,
+            'initial_parking_fee'    => $initialParkingFee,
+            'succeeding_parking_fee' => 0,
+            'day_fee'                => 0,
+            'parked_log_id'          => $parkedLogId,
+            'parked_at'              => Carbon::now()->toDateTimeString(),
+        ]);
+    }
+
+    /**
+     * Check and get if this park only re-entered parking.
+     */
+    public function getReEnterTransaction($plateNo)
+    {
+        $reEnterDateCondition = Carbon::now()
+            ->addMinutes(config('app.parking.exit-grace'));
+
+        return $this->model
+            ->refresh()
+            ->where('type', TransactionType::fromKey('EXIT')->value)
+            ->where('plate_no', $plateNo)
+            ->where('unparked_at', '>=', $reEnterDateCondition)
+            ->first();
+    }
+
+    /**
+     * Save exit parking transaction.
+     *
+     * @param \App\Models\Log $log
+     * @param \App\Models\Transaction $parking
+     * @param float $succeedingFee
+     * @param float $dayFee
+     * @return \App\Models\Transaction
+     */
+    public function saveUnparkingTransaction(Log $log, Transaction $parking, float $succeedingFee, float $dayFee)
+    {
+        return $this->firstOrCreate([
+            'txn_id'                 => $parking->txn_id . '_t',
+            'txn_ref_id'             => $parking->txn_ref_id,
+        ], [
+            'type'                   => TransactionType::fromKey('EXIT')->value,
+            'entry_point_id'         => $parking->entry_point_id,
+            'slot_id'                => $parking->slot_id,
+            'slot_type_id'           => $parking->slot_type_id,
+            'vehicle_type_id'        => $parking->vehicle_type_id,
+            'plate_no'               => $parking->plate_no,
+            'initial_parking_fee'    => 0,
+            'succeeding_parking_fee' => $succeedingFee,
+            'day_fee'                => $dayFee,
+            'parked_log_id'          => $parking->parked_log_id,
+            'parked_at'              => $parking->parked_at,
+            'unparked_log_id'        => $log->id,
+            'unparked_at'            => Carbon::now()->toDateTimeString(),
         ]);
     }
 }
