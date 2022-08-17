@@ -47,7 +47,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         if ('production' === env('APP_ENV')) {
             RateLimiter::for('api', function (Request $request) {
-                return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+                return Limit::perMinute(270)->by($request->user()?->id ?: $request->ip());
             });
         }
     }
